@@ -1,0 +1,30 @@
+Game Overview:
+The game is a Harvard-Westlake-based adaptation of GeoGuessr. Each day, players are given a photo of a location 
+somewhere on campus, and using a detailed map of the school, they must guess the spot of the location in the photo 
+as accurately as possible. A daily leaderboard tracks scores, and is based on proximity to the actual location and 
+the speed of the guess. 
+
+Theme/Color Scheme:
+ - red/black/gold theme (HW colors)
+ - aesthetic picture of HW in the background, like the field at a sunset or something
+ - game logo in the center, and a “play game” or “play now” button underneath
+ - play game button would be in the middle, oval shaped, red with white text
+ - leaderboard on the left side of the screen, rectangle with rounded corners, black with 
+ - white text displaying name, score, and time it took. Format would be: 
+        “placement”	“name”	“score”		“time”
+ - small rules list on the right side, same format as leaderboard
+
+ - once a player clicks the play game button, they are taken to a new screen where the daily picture takes up the whole screen 
+ - minimap in the top right corner that would expand on click and allows for zooming in
+ - when people choose location, a little marker shows where they click
+ - an oval button in red on the bottom middle that says “submit guess”
+ - map is a birds-eye view of HW upper school campus that has white text labels for the different buildings
+ - timer counting in the top left corner, formate is:  Time: “minute”: “second”
+
+ - end screen after submitting guess shows updated leaderboard in the center of the screen, 
+   with your new score having an outline to highlight it
+ - three buttons underneath, one to see the picture again, one to share your score, and one to return to the main screen
+
+Typography:
+ - primary is probably like a bold or semi-bold lato
+ - secondary is probably just a regular or light lato
