@@ -17,24 +17,20 @@ The game is a Harvard-Westlake-based adaptation of GeoGuessr. Each day, players 
 
 ### Gameplay Screen
 
-- **Photo Display:** Once the player clicks “Play Game,” they’re taken to a screen where the daily picture fills the screen
+- **Photo Display:** Once the player clicks “Play Game,” they’re taken to a screen where the daily picture fills the screen. It is static image, so know moving or panning around but the player can zoom in
 
-## This feature of the game needs a littl emore elaboration. Can you move around? Are there arrows you can click to move around somewhere? Or is it just stationary and a static image?
-
-- **Mini Map:** In the top right corner, expandable on click, with zoom-in options
+- **Mini Map:** In the top right corner, expandable on click, with text in the bottom right corner showing how to zoom-in. 
 - **Marker:** A marker shows where the player clicks to guess the location
 - **Submit Button:** Oval-shaped, red, located at the bottom center, labeled “Submit Guess”
-- **Campus Map:** Bird's-eye view of HW upper school campus with white text labels for buildings
+- **Campus Map:** Map is a bird's-eye view of HW upper school campus with white text labels for the different buildings
 - **Timer:** Located in the top left corner, format is: `Time: mm:ss`
 
-## Is this in the map screen or the photo display screen?
+- submit button and timer stay there when player enters the map
+- marker shows on the minimap as well if they player then exits the minimap
 
 ### End Screen
-
+- New screen shown after game is complete
 - **Leaderboard Display:** Centered on screen, with the player’s new score highlighted
-
-## I'm a little confused- is this a whole new screen? Is this back on the main page? This screen specifically should be expanded upon
-
 - **Buttons:** Three options below the leaderboard:
   - View picture again
   - Share score
