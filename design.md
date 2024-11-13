@@ -42,5 +42,5 @@ The game is a Harvard-Westlake-based adaptation of GeoGuessr. Each day, players 
 - **Secondary Font:** Regular or light Lato
 
 ### Difficulty
-- Easy
+- Normal
 - Whiteboards only
