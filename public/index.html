@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimap Game</title>
+    <link rel="stylesheet" href="minimap.css">
+</head>
+<body>
+    <!-- Your Game Content Here -->
+    
+    <!-- Minimap Container -->
+    <div id="minimap" onclick="toggleMinimap()">
+        <img src="hwmap.png" alt="Minimap" id="minimap-img">
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function toggleMinimap() {
+            const minimap = document.getElementById('minimap');
+            minimap.classList.toggle('enlarged');
+        }
+    </script>
+</body>
+</html>
