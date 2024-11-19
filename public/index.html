@@ -7,19 +7,115 @@
     <link rel="stylesheet" href="minimap.css">
 </head>
 <body>
-    <!-- Your Game Content Here -->
-    
-    <!-- Minimap Container -->
-    <div id="minimap" onclick="toggleMinimap()">
-        <img src="hwmap.png" alt="Minimap" id="minimap-img">
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <button id="play-button" onclick="startGame()">Play Game</button>
     </div>
 
+    <!-- Game Screen -->
+    <div id="game-screen" style="display: none;">
+        <button id="submit-button" onclick="submitLocation()">Submit</button>
+        <!-- Minimap Container -->
+        <div id="minimap">
+            <img src="pictures/hwmap.png" alt="Minimap" id="minimap-img">
+            <div id="marker"></div>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" style="display: none;">
+        <p id="distance-text" style="font-size: 20px; text-align: center;"></p>
+    </div>
+    
     <!-- JavaScript -->
     <script>
-        function toggleMinimap() {
-            const minimap = document.getElementById('minimap');
-            minimap.classList.toggle('enlarged');
+        // Define the ImageCoordinate class
+        class ImageCoordinate {
+            constructor(src, x, y) {
+                this.src = src; // Path to the image
+                this.x = x;     // X-coordinate
+                this.y = y;     // Y-coordinate
+            }
         }
+
+        // Array to hold the image coordinates
+        const imageCollection = [];
+        imageCollection.push(new ImageCoordinate('pictures/hwmap.png', 600, 300));
+        imageCollection.push(new ImageCoordinate('pictures/brotizzle&antman.png', 400, 200));
+        imageCollection.push(new ImageCoordinate('pictures/dogeminer.png', 500, 350));
+
+
+        // Function to add new images to the collection
+        function addImage(src, x, y) {
+            const newImage = new ImageCoordinate(src, x, y);
+            console.log('Added:', newImage);
+        }
+
+        // Start the game and display the game screen
+        function startGame() {
+            // Hide the start screen
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+
+            // Randomly select an image
+            const randomIndex = Math.floor(Math.random() * imageCollection.length);
+            const selectedImage = imageCollection[randomIndex];
+
+            // Update the minimap image
+            const timestamp = new Date().getTime(); // Cache-busting parameter
+            document.getElementById('minimap-img').src = `${selectedImage.src}?t=${timestamp}`;
+
+            // Update the correct location
+            correctLocation.x = selectedImage.x;
+            correctLocation.y = selectedImage.y;
+
+            console.log(`Game started with random index: ${randomIndex}, image: ${selectedImage.src}`);
+        }
+
+        // Listen for clicks on the minimap to save marker position
+        document.getElementById('minimap').addEventListener('click', function (event) {
+            const minimap = this;
+            const rect = minimap.getBoundingClientRect();
+            const x = event.clientX - rect.left; // Absolute X in pixels
+            const y = event.clientY - rect.top;  // Absolute Y in pixels
+
+            // Save the clicked position as a new image coordinate (example image used)
+            addImage('pictures/example.png', x, y);
+
+            // Update marker position
+            const marker = document.getElementById('marker');
+            marker.style.left = `${(x / rect.width) * 100}%`;
+            marker.style.top = `${(y / rect.height) * 100}%`;
+            marker.style.display = 'block';
+        });
+
+        // Correct location (hardcoded for now)
+        const correctLocation = { x: 600, y: 300 };
+
+        // Function to handle submission
+        function submitLocation() {
+            // Check if any marker has been added
+            if (imageCollection.length === 0) {
+                alert('You must choose a location on the minimap before submitting!');
+                return;
+            }
+
+            // Get the last marker's position
+            const chosenLocation = imageCollection[imageCollection.length - 1];
+
+            // Calculate distance
+            const xDistance = Math.abs(correctLocation.x - chosenLocation.x);
+            const yDistance = Math.abs(correctLocation.y - chosenLocation.y);
+
+            // Display the distance
+            const distanceText = `Distance from correct location: <br> x: ${xDistance} &nbsp;&nbsp; y: ${yDistance}`;
+            document.getElementById('distance-text').innerHTML = distanceText;
+
+            // Hide game screen and show end screen
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'flex';
+        }
+
     </script>
 </body>
 </html>
