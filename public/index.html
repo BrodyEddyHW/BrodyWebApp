@@ -25,6 +25,7 @@
     <!-- End Screen -->
     <div id="end-screen" style="display: none;">
         <p id="distance-text" style="font-size: 20px; text-align: center;"></p>
+        <button id="play-again-button" onclick="playAgain()">Play Again</button>
     </div>
     
     <!-- JavaScript -->
@@ -40,15 +41,18 @@
 
         // Array to hold the image coordinates
         const imageCollection = [];
-        imageCollection.push(new ImageCoordinate('pictures/hwmap.png', 600, 300));
+        imageCollection.push(new ImageCoordinate('pictures/tempImage.jpeg', 600, 300));
         imageCollection.push(new ImageCoordinate('pictures/brotizzle&antman.png', 400, 200));
         imageCollection.push(new ImageCoordinate('pictures/dogeminer.png', 500, 350));
 
 
         // Function to add new images to the collection
-        function addImage(src, x, y) {
-            const newImage = new ImageCoordinate(src, x, y);
-            console.log('Added:', newImage);
+        // Array to hold the user's marker positions
+        const markerPositions = [];
+
+        function addImage(x, y) {
+            markerPositions.push({ x, y });
+            console.log('Added marker position:', { x, y });
         }
 
         // Start the game and display the game screen
@@ -61,16 +65,17 @@
             const randomIndex = Math.floor(Math.random() * imageCollection.length);
             const selectedImage = imageCollection[randomIndex];
 
-            // Update the minimap image
-            const timestamp = new Date().getTime(); // Cache-busting parameter
-            document.getElementById('minimap-img').src = `${selectedImage.src}?t=${timestamp}`;
+            // Update the main background image
+            const gameScreen = document.getElementById('game-screen');
+            gameScreen.style.backgroundImage = `url(${selectedImage.src})`;
 
             // Update the correct location
             correctLocation.x = selectedImage.x;
             correctLocation.y = selectedImage.y;
 
-            console.log(`Game started with random index: ${randomIndex}, image: ${selectedImage.src}`);
+            console.log(`Game started with random index: ${randomIndex}, background image: ${selectedImage.src}`);
         }
+
 
         // Listen for clicks on the minimap to save marker position
         document.getElementById('minimap').addEventListener('click', function (event) {
@@ -79,8 +84,8 @@
             const x = event.clientX - rect.left; // Absolute X in pixels
             const y = event.clientY - rect.top;  // Absolute Y in pixels
 
-            // Save the clicked position as a new image coordinate (example image used)
-            addImage('pictures/example.png', x, y);
+            // Save the clicked position
+            addImage(x, y);
 
             // Update marker position
             const marker = document.getElementById('marker');
@@ -89,19 +94,20 @@
             marker.style.display = 'block';
         });
 
+
         // Correct location (hardcoded for now)
         const correctLocation = { x: 600, y: 300 };
 
         // Function to handle submission
         function submitLocation() {
             // Check if any marker has been added
-            if (imageCollection.length === 0) {
+            if (markerPositions.length === 0) {
                 alert('You must choose a location on the minimap before submitting!');
                 return;
             }
 
             // Get the last marker's position
-            const chosenLocation = imageCollection[imageCollection.length - 1];
+            const chosenLocation = markerPositions[markerPositions.length - 1];
 
             // Calculate distance
             const xDistance = Math.abs(correctLocation.x - chosenLocation.x);
@@ -116,6 +122,35 @@
             document.getElementById('end-screen').style.display = 'flex';
         }
 
+        function playAgain() {
+            // Hide the end screen
+            document.getElementById('end-screen').style.display = 'none';
+
+            // Reset marker positions
+            markerPositions.length = 0;
+
+            // Randomly select a new image
+            const randomIndex = Math.floor(Math.random() * imageCollection.length);
+            const selectedImage = imageCollection[randomIndex];
+
+            // Update the main background image
+            const gameScreen = document.getElementById('game-screen');
+            gameScreen.style.backgroundImage = `url(${selectedImage.src})`;
+
+            // Update the correct location
+            correctLocation.x = selectedImage.x;
+            correctLocation.y = selectedImage.y;
+
+            console.log(`Play again with random index: ${randomIndex}, background image: ${selectedImage.src}`);
+
+            // Directly display the game screen
+            document.getElementById('game-screen').style.display = 'block';
+
+            // Optionally, reset any game state (e.g., marker visibility)
+            const marker = document.getElementById('marker');
+            marker.style.display = 'none';
+        }
+        
     </script>
 </body>
 </html>
