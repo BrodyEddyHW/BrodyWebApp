@@ -14,6 +14,9 @@
 
     <!-- Game Screen -->
     <div id="game-screen" style="display: none;">
+        <!-- Timer Display -->
+        <div id="timer">0:00.000</div>
+
         <button id="submit-button" onclick="submitLocation()">Submit</button>
         <!-- Minimap Container -->
         <div id="minimap">
@@ -24,6 +27,8 @@
 
     <!-- End Screen -->
     <div id="end-screen" style="display: none;">
+        <!-- Display Final Time -->
+        <p id="final-time" style="font-size: 24px; text-align: center;"></p>
         <p id="distance-text" style="font-size: 20px; text-align: center;"></p>
         <button id="play-again-button" onclick="playAgain()">Play Again</button>
     </div>
@@ -45,14 +50,57 @@
         imageCollection.push(new ImageCoordinate('pictures/brotizzle&antman.png', 400, 200));
         imageCollection.push(new ImageCoordinate('pictures/dogeminer.png', 500, 350));
 
-
-        // Function to add new images to the collection
         // Array to hold the user's marker positions
         const markerPositions = [];
 
         function addImage(x, y) {
             markerPositions.push({ x, y });
             console.log('Added marker position:', { x, y });
+        }
+
+        // Timer variables
+        let timerInterval; // Holds the setInterval reference
+        let startTime;     // Start time in milliseconds
+        let elapsedTime = 0; // Elapsed time in milliseconds
+
+        function startTimer() {
+            // Record the start time
+            startTime = Date.now();
+            // Update the timer display immediately
+            updateTimer();
+            // Start the timer
+            timerInterval = setInterval(updateTimer, 10); // Update every 10 milliseconds
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            // Calculate the final elapsed time
+            elapsedTime = Date.now() - startTime;
+        }
+
+        function updateTimer() {
+            // Calculate elapsed time
+            elapsedTime = Date.now() - startTime;
+
+            // Format the elapsed time
+            const timeString = formatTime(elapsedTime);
+
+            // Update the timer display
+            document.getElementById('timer').textContent = timeString;
+        }
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const millis = milliseconds % 1000;
+
+            // Format minutes, seconds, and milliseconds with leading zeros if needed
+            const minutesStr = minutes;
+            const secondsStr = seconds < 10 ? '0' + seconds : seconds;
+            const millisStr = millis.toString().padStart(3, '0');
+
+            return `${minutesStr}:${secondsStr}.${millisStr}`;
         }
 
         // Start the game and display the game screen
@@ -74,8 +122,10 @@
             correctLocation.y = selectedImage.y;
 
             console.log(`Game started with random index: ${randomIndex}, background image: ${selectedImage.src}`);
-        }
 
+            // Start the timer
+            startTimer();
+        }
 
         // Listen for clicks on the minimap to save marker position
         document.getElementById('minimap').addEventListener('click', function (event) {
@@ -94,8 +144,7 @@
             marker.style.display = 'block';
         });
 
-
-        // Correct location (hardcoded for now)
+        // Correct location (will be updated when a new image is selected)
         const correctLocation = { x: 600, y: 300 };
 
         // Function to handle submission
@@ -116,6 +165,12 @@
             // Display the distance
             const distanceText = `Distance from correct location: <br> x: ${xDistance} &nbsp;&nbsp; y: ${yDistance}`;
             document.getElementById('distance-text').innerHTML = distanceText;
+
+            // Stop the timer
+            stopTimer();
+
+            // Display the final time on the end screen
+            document.getElementById('final-time').textContent = 'Your time: ' + formatTime(elapsedTime);
 
             // Hide game screen and show end screen
             document.getElementById('game-screen').style.display = 'none';
@@ -146,11 +201,13 @@
             // Directly display the game screen
             document.getElementById('game-screen').style.display = 'block';
 
-            // Optionally, reset any game state (e.g., marker visibility)
+            // Reset marker visibility
             const marker = document.getElementById('marker');
             marker.style.display = 'none';
+
+            // Start the timer again
+            startTimer();
         }
-        
     </script>
 </body>
 </html>
