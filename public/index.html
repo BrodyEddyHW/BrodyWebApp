@@ -106,6 +106,9 @@
             return `${minutesStr}:${secondsStr}.${millisStr}`;
         }
 
+        // Correct location (will be updated when a new image is selected)
+        const correctLocation = { x: 600, y: 300 };
+
         // Start the game and display the game screen
         function startGame() {
             // Hide the start screen
@@ -146,9 +149,6 @@
             marker.style.top = `${(y / rect.height) * 100}%`;
             marker.style.display = 'block';
         });
-
-        // Correct location (will be updated when a new image is selected)
-        const correctLocation = { x: 600, y: 300 };
 
         // Function to handle submission
         function submitLocation() {

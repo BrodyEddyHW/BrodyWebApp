@@ -7,12 +7,12 @@ body {
 
 /* Start Screen Styles */
 #start-screen {
-    background-color: #fff;
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: url('pictures/HW.png') center center / cover no-repeat;
 }
 
 #play-button {
