@@ -7,16 +7,16 @@ body {
 
 /* Start Screen Styles */
 #start-screen {
-    background-color: #fff;
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: url('pictures/HW.png') center center / cover no-repeat;
 }
 
 #play-button {
-    background-color: red;
+    background-color: #d42828;
     color: white;
     border: none;
     border-radius: 25px;
@@ -24,22 +24,35 @@ body {
     font-size: 18px;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 #play-button:hover {
     transform: scale(1.1);
+    background-color: #bb1f1f;
 }
 
 /* Game Screen Styles */
 #game-screen {
-    background-image: url('pictures/tempImage.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
+    position: relative; /* To position the timer correctly */
 }
 
+/* Timer Styles */
+#timer {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+}
 
 /* Minimap Styles */
 #minimap {
@@ -87,7 +100,7 @@ body {
     bottom: 20px;
     left: 50%;
     margin-left: -75px; /* Half of the button's width */
-    background-color: red;
+    background-color: #d42828;
     color: white;
     border: none;
     border-radius: 25px;
@@ -95,32 +108,69 @@ body {
     font-size: 18px;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 #submit-button:hover {
     transform: scale(1.1);
+    background-color: #bb1f1f;
 }
 
 /* End Screen */
 #end-screen {
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: white;
-    color: black;
-    font-family: Arial, sans-serif;
     text-align: center;
     flex-direction: column;
+    /* A cool background gradient or image */
+    background: linear-gradient(135deg, #1c1c1c 0%, #363636 100%);
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+/* Scoreboard Container */
+.scoreboard-container {
+    background: rgba(0, 0, 0, 0.7);
+    border: 3px solid #d42828;
+    border-radius: 20px;
+    padding: 40px;
+    width: 300px;
+    box-shadow: 0px 0px 30px rgba(212,40,40,0.5);
+    animation: scoreboardFadeIn 1s ease;
+}
+
+@keyframes scoreboardFadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.scoreboard-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #d42828, -2px -2px 0px #d42828;
+}
+
+.scoreboard-text {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.scoreboard-score {
+    font-size: 28px;
+    margin: 20px 0;
+    font-weight: bold;
+    color: #d42828;
+    text-shadow: 1px 1px 2px #000;
 }
 
 #play-again-button {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    margin-left: -75px; /* Half of the button's width */
-    background-color: red;
+    background-color: #d42828;
     color: white;
     border: none;
     border-radius: 25px;
@@ -128,9 +178,11 @@ body {
     font-size: 18px;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    margin-top: 20px;
 }
 
 #play-again-button:hover {
-    transform: scale(1.1); /* Grow without shifting */
+    transform: scale(1.1);
+    background-color: #bb1f1f;
 }
