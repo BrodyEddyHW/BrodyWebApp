@@ -30,6 +30,7 @@
         <!-- Display Final Time -->
         <p id="final-time" style="font-size: 24px; text-align: center;"></p>
         <p id="distance-text" style="font-size: 20px; text-align: center;"></p>
+        <p id="score-text" style="font-size: 26px; text-align: center; font-weight: bold;"></p>
         <button id="play-again-button" onclick="playAgain()">Play Again</button>
     </div>
     
@@ -171,6 +172,18 @@
 
             // Display the final time on the end screen
             document.getElementById('final-time').textContent = 'Your time: ' + formatTime(elapsedTime);
+
+            // Calculate score
+            // Simple scoring formula:
+            // Start with 1000 points
+            // Subtract (xDistance + yDistance) points
+            // Subtract 10 points per second
+            const totalSeconds = Math.floor(elapsedTime / 1000);
+            let score = 1000 - (xDistance + yDistance) - (totalSeconds * 10);
+            if (score < 0) score = 0;
+            
+            // Display the score
+            document.getElementById('score-text').textContent = 'Your Score: ' + score + ' / 1000';
 
             // Hide game screen and show end screen
             document.getElementById('game-screen').style.display = 'none';
