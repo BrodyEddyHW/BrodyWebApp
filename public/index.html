@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minimap Game</title>
     <link rel="stylesheet" href="minimap.css">
+    <!-- Include Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <!-- Start Screen -->
@@ -32,12 +35,40 @@
             <p id="final-time" class="scoreboard-text"></p>
             <p id="distance-text" class="scoreboard-text"></p>
             <p id="score-text" class="scoreboard-score"></p>
-            <button id="play-again-button" onclick="playAgain()">Play Again</button>
+            <div class="button-container">
+                <button id="play-again-button" onclick="playAgain()">Play Again</button>
+                <button id="leaderboard-button" onclick="showLeaderboard()">Leaderboard</button>
+            </div>
         </div>
     </div>
-    
-    <!-- JavaScript -->
+
+    <!-- Leaderboard Screen -->
+    <div id="leaderboard-screen" style="display: none;">
+        <div class="scoreboard-container">
+            <h1 class="scoreboard-title">Leaderboard</h1>
+            <div id="leaderboard-list"></div>
+            <button id="return-button" onclick="returnToEndScreen()">Return</button>
+        </div>
+    </div>
+
     <script>
+        // ---------------------- Firebase Initialization ----------------------
+        // Replace the below config object with your project's Firebase config
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "whereinhw",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ---------------------- Game Logic ----------------------
+
         // Define the ImageCoordinate class
         class ImageCoordinate {
             constructor(src, x, y) {
@@ -98,7 +129,6 @@
             const seconds = totalSeconds % 60;
             const millis = milliseconds % 1000;
 
-            // Format minutes, seconds, and milliseconds with leading zeros if needed
             const minutesStr = minutes;
             const secondsStr = seconds < 10 ? '0' + seconds : seconds;
             const millisStr = millis.toString().padStart(3, '0');
@@ -151,7 +181,7 @@
         });
 
         // Function to handle submission
-        function submitLocation() {
+        async function submitLocation() {
             // Check if any marker has been added
             if (markerPositions.length === 0) {
                 alert('You must choose a location on the minimap before submitting!');
@@ -179,9 +209,15 @@
             const totalSeconds = Math.floor(elapsedTime / 1000);
             let score = 1000 - (xDistance + yDistance) - (totalSeconds * 10);
             if (score < 0) score = 0;
-            
-            // Display the score
+
             document.getElementById('score-text').textContent = 'Your Score: ' + score + ' / 1000';
+
+            // Prompt for username
+            const username = prompt("Enter your username for the leaderboard:");
+            if (username && username.trim() !== "") {
+                // Save to Firebase
+                await saveScoreToFirebase(username.trim(), score);
+            }
 
             // Hide game screen and show end screen
             document.getElementById('game-screen').style.display = 'none';
@@ -218,6 +254,70 @@
 
             // Start the timer again
             startTimer();
+        }
+
+        // ---------------------- Leaderboard Logic ----------------------
+
+        function showLeaderboard() {
+            // Hide end screen, show leaderboard screen
+            document.getElementById('end-screen').style.display = 'none';
+            document.getElementById('leaderboard-screen').style.display = 'flex';
+
+            // Fetch and display leaderboard
+            loadLeaderboard();
+        }
+
+        function returnToEndScreen() {
+            document.getElementById('leaderboard-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'flex';
+        }
+
+        async function saveScoreToFirebase(username, score) {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            const day = today.getDate().toString().padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+
+            await db.collection('scores').add({
+                username: username,
+                score: score,
+                date: dateStr,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+
+        async function loadLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = '<p class="scoreboard-text">Loading...</p>';
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            const day = today.getDate().toString().padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+
+            // Query top 10 scores of the day, ordered by score descending
+            const querySnapshot = await db.collection('scores')
+                .where('date', '==', dateStr)
+                .orderBy('score', 'desc')
+                .limit(10)
+                .get();
+
+            let html = '<ol class="leaderboard-ol">';
+            let index = 1;
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                html += `<li class="scoreboard-text">${index}. ${data.username} - ${data.score}</li>`;
+                index++;
+            });
+            html += '</ol>';
+
+            if (index === 1) {
+                html = '<p class="scoreboard-text">No scores today yet!</p>';
+            }
+
+            leaderboardList.innerHTML = html;
         }
     </script>
 </body>
